@@ -3,22 +3,27 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import 'react-native-gesture-handler';
 
-import Login from './views/Login/Login';
-import AppSolutions from './views/AppSolutions/AppSolutions';
+import AuthStackNavigator from './navigators/AuthStackNavigator';
+import HomeStackNavigator from './navigators/HomeStackNavigator';
 
-const Stack = createStackNavigator();
+const RootStack = createStackNavigator();
 
-function App() {
+const App = ({ navigation }) => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="AppSolutions" component={AppSolutions} />
-      </Stack.Navigator>
+    <NavigationContainer independent={true}>
+      <RootStack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <RootStack.Screen name={'AuthStack'} component={AuthStackNavigator} />
+        <RootStack.Screen name={'HomeStack'} component={HomeStackNavigator} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
-}
+};
 
 export default App;

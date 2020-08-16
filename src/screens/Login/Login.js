@@ -1,10 +1,38 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, Button } from 'react-native';
-import { Col, Row, Grid } from 'react-native-easy-grid';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Image,
+  Button,
+  ToastAndroid,
+} from 'react-native';
+// import { Col, Row, Grid } from 'react-native-easy-grid';
+import loginServices from '../../services/login';
+import IconButton from '../../components/IconButton/IconButton';
 
 const Login = ({ navigation }) => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
+
+  const login = () => {
+    let loginRequestFormat = {
+      email: user,
+      password,
+    };
+    loginServices.login(loginRequestFormat).then((res) => {
+      switch (res.code) {
+        case 200:
+          navigation.navigate('HomeStack');
+          break;
+
+        default:
+          ToastAndroid.show('Error', ToastAndroid.SHORT);
+          break;
+      }
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -16,6 +44,7 @@ const Login = ({ navigation }) => {
       />
 
       <Text>User</Text>
+      {/* <IconButton iconName={'help'} /> */}
       <TextInput
         style={styles.input}
         key={'user'}
@@ -29,11 +58,7 @@ const Login = ({ navigation }) => {
         secureTextEntry={true}
         onChangeText={(text) => setPassword(text)}
       />
-
-      <Button
-        title={'Log in'}
-        onPress={() => navigation.navigate('AppSolutions')}
-      />
+      <Button title={'Log in'} onPress={() => login()} />
     </View>
   );
 };
