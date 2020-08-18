@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ToastAndroid, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ToastAndroid,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import {
   Table,
   TableWrapper,
@@ -13,6 +20,8 @@ import {
 import IssuesServices from '../../services/issues';
 import utils from '../../utils';
 
+var { height, width } = Dimensions.get('window');
+
 const ActiveIssues = () => {
   const [widthArr, setWidthArr] = useState([
     40,
@@ -25,19 +34,37 @@ const ActiveIssues = () => {
     180,
     200,
   ]);
-  const [headers, SetHeaders] = useState(['ID', 'Title', 'State', 'Priority']);
+  const [headers, setHeaders] = useState(['ID', 'Title', 'State', 'Priority']);
   const [issues, setIssues] = useState([
     [1, 'Prueba', 'Assigned', 'Medium'],
     [2, 'Prueba', 'Assigned', 'Medium'],
   ]);
+
+  const [layout, setLayout] = useState({
+    height: height,
+    width: width,
+  });
+
+  const _onLayout = (event) => {
+    console.log(
+      '------------------------------------------------' +
+        JSON.stringify(event.nativeEvent.layout)
+    );
+
+    console.log('layout', layout);
+
+    setLayout({
+      height: event.nativeEvent.layout.height,
+      width: event.nativeEvent.layout.width,
+    });
+  };
 
   const getActiveIssues = () => {
     IssuesServices.getActiveIssues().then((res) => {
       switch (res.code) {
         case 200:
           var array = utils.jsonArrayToArray(res.data);
-          console.log('array', array);
-          SetHeaders(Object.keys(res.data[0]));
+          setHeaders(Object.keys(res.data[0]));
           setIssues(array);
           break;
 
@@ -59,7 +86,15 @@ const ActiveIssues = () => {
         Active Issues
       </Text>
       <ScrollView horizontal={true}>
-        <View>
+        <View
+          onLayout={(event) => _onLayout(event)}
+          style={{
+            // backgroundColor: 'green',
+            height: layout.height - 10,
+            width: layout.width - 10,
+            margin: 5,
+          }}
+        >
           <Table borderStyle={{ borderColor: '#C1C0B9' }}>
             <Row
               data={headers}
