@@ -24,7 +24,7 @@ const Login = ({ navigation }) => {
     loginServices.login(loginRequestFormat).then((res) => {
       switch (res.code) {
         case 200:
-          navigation.navigate('HomeStack');
+          navigation.replace('HomeStack');
           break;
 
         default:

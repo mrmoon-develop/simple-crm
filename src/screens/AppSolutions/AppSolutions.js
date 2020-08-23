@@ -91,10 +91,10 @@ const PQRButton = ({ navigation }) => {
   );
 };
 
-const CloseIssuesButton = ({ navigation }) => {
+const ClosedIssuesButton = ({ navigation }) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate('Close Issues')}
+      onPress={() => navigation.navigate('Closed Issues')}
       underlayColor="white"
       style={{ padding: 20 }}
     >
@@ -131,7 +131,7 @@ const AppSolutions = ({ navigation }) => {
           <PQRButton navigation={navigation} />
         </Col>
         <Col>
-          <CloseIssuesButton navigation={navigation} />
+          <ClosedIssuesButton navigation={navigation} />
         </Col>
       </Row>
     </Grid>

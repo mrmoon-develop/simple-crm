@@ -51,7 +51,7 @@ const ActiveIssues = () => {
         JSON.stringify(event.nativeEvent.layout)
     );
 
-    console.log('layout', layout);
+    // console.log('layout', layout);
 
     setLayout({
       height: event.nativeEvent.layout.height,
@@ -87,7 +87,7 @@ const ActiveIssues = () => {
       </Text>
       <ScrollView horizontal={true}>
         <View
-          onLayout={(event) => _onLayout(event)}
+          // onLayout={(event) => _onLayout(event)}
           style={{
             // backgroundColor: 'green',
             height: layout.height - 10,

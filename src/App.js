@@ -8,21 +8,24 @@ import 'react-native-gesture-handler';
 
 import AuthStackNavigator from './navigators/AuthStackNavigator';
 import HomeStackNavigator from './navigators/HomeStackNavigator';
+import { UserProvider } from './context/userContext';
 
 const RootStack = createStackNavigator();
 
 const App = ({ navigation }) => {
   return (
-    <NavigationContainer independent={true}>
-      <RootStack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <RootStack.Screen name={'AuthStack'} component={AuthStackNavigator} />
-        <RootStack.Screen name={'HomeStack'} component={HomeStackNavigator} />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <UserProvider>
+      <NavigationContainer>
+        <RootStack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <RootStack.Screen name={'AuthStack'} component={AuthStackNavigator} />
+          <RootStack.Screen name={'HomeStack'} component={HomeStackNavigator} />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </UserProvider>
   );
 };
 

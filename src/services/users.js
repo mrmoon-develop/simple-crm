@@ -1,7 +1,6 @@
 import Axios from 'axios';
 
-const BASE_URL =
-  process.env.REACT_APP_API_URL || 'http://192.168.0.48:3000/api';
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://192.168.1.8:3000/api';
 const HEADERS = {
   'Content-Type': 'application/json',
   'Access-Control-Allow-Origin': '*',
