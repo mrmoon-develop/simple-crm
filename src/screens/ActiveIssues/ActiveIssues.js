@@ -6,6 +6,7 @@ import {
   ToastAndroid,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import {
   Table,
@@ -17,12 +18,18 @@ import {
   Cell,
 } from 'react-native-table-component';
 
+import { Icon, Header } from 'react-native-elements';
+
 import IssuesServices from '../../services/issues';
 import utils from '../../utils';
 
+//Hook for react navigation
+import { useFocusEffect } from '@react-navigation/native';
+import { newIssueFormStyles } from '../../styles/styles';
+
 var { height, width } = Dimensions.get('window');
 
-const ActiveIssues = () => {
+const ActiveIssues = ({ navigation }) => {
   const [widthArr, setWidthArr] = useState([
     40,
     60,
@@ -63,9 +70,10 @@ const ActiveIssues = () => {
     IssuesServices.getActiveIssues().then((res) => {
       switch (res.code) {
         case 200:
-          var array = utils.jsonArrayToArray(res.data);
-          setHeaders(Object.keys(res.data[0]));
-          setIssues(array);
+          var issuesArray = utils.jsonArrayToArray(res.data);
+          // console.log('Object.keys(res.data[0])', Object.keys(res.data[0]));
+          // setHeaders(Object.keys(res.data[0]));
+          setIssues(issuesArray);
           break;
 
         default:
@@ -80,10 +88,46 @@ const ActiveIssues = () => {
     getActiveIssues();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      getActiveIssues();
+      return () => {
+        setIssues([]);
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, [])
+  );
+
   return (
-    <View style={styles.container}>
-      <Text style={{ textTransform: 'uppercase', margin: 20 }}>
-        Active Issues
+    <View>
+      <Header
+        statusBarProps={{ barStyle: 'default' }}
+        backgroundColor={'red'}
+        leftComponent={{
+          icon: 'chevron-left',
+          color: '#fff',
+          onPress: () => navigation.navigate('AppSolutions'),
+        }}
+        centerComponent={{
+          text: 'Novedades activas',
+          style: {
+            color: '#fff',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+          },
+        }}
+      />
+
+      <Text
+        style={{
+          marginHorizontal: 20,
+          marginBottom: 10,
+          marginVertical: 20,
+          fontSize: 30,
+        }}
+      >
+        Toca una novedad para visualizarla
       </Text>
       <ScrollView horizontal={true}>
         <View
@@ -98,24 +142,30 @@ const ActiveIssues = () => {
           <Table borderStyle={{ borderColor: '#C1C0B9' }}>
             <Row
               data={headers}
-              widthArr={widthArr}
+              // widthArr={widthArr}
               style={styles.head}
-              textStyle={styles.text}
+              textStyle={styles.textHeader}
             />
           </Table>
           <ScrollView style={styles.dataWrapper}>
             <Table borderStyle={{ borderColor: '#C1C0B9' }}>
               {issues.map((dataRow, index) => (
-                <Row
+                <TouchableOpacity
                   key={index}
-                  data={dataRow}
-                  widthArr={widthArr}
-                  style={[
-                    styles.row,
-                    index % 2 && { backgroundColor: '#ffffff' },
-                  ]}
-                  textStyle={styles.text}
-                />
+                  onPress={() => {
+                    navigation.navigate('New Issue', { issueId: dataRow[0] });
+                  }}
+                >
+                  <Row
+                    data={dataRow}
+                    // widthArr={widthArr}
+                    style={[
+                      styles.row,
+                      index % 2 && { backgroundColor: '#ffffff' },
+                    ]}
+                    textStyle={styles.text}
+                  />
+                </TouchableOpacity>
               ))}
             </Table>
           </ScrollView>
@@ -136,11 +186,17 @@ const styles = StyleSheet.create({
   },
   head: {
     height: 50,
-    backgroundColor: '#d9f1f7',
+    backgroundColor: '#FF8D74',
   },
   text: {
     textAlign: 'center',
     fontWeight: 'bold',
+    color: 'black',
+  },
+  textHeader: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: 'white',
   },
   dataWrapper: {
     marginTop: -1,

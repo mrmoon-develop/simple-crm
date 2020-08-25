@@ -1,9 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image, ScrollView } from 'react-native';
+
+//Resources
+import noProfileImage from '../../resources/images/no-profile-img.png';
 
 //Styles
-import { mainStyles } from '@styles/styles';
-import { ScrollView } from 'react-native-gesture-handler';
+import { mainStyles } from '../../styles/styles';
 
 //Grid
 import { Col, Row, Grid } from 'react-native-easy-grid';
@@ -16,10 +18,16 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 
 //Context reducer
 import { UserContext } from '../../context/userContext';
+import { Header } from 'react-native-elements';
 
 export default function User({ navigation }) {
   //Context
   const [login, loginAction] = useContext(UserContext);
+
+  /**
+   * user details on components state
+   */
+  const [UserDetails, setUserDetails] = useState(login.user);
 
   /**
    * Handle logout
@@ -28,13 +36,8 @@ export default function User({ navigation }) {
     loginAction({
       type: 'logout',
     });
-    navigation.replace('AuthStack');
+    navigation.replace('AuthStack', { screen: 'Login' });
   };
-
-  /**
-   * user details on components state
-   */
-  const [UserDetails, setUserDetails] = useState(login.user);
 
   /**
    * Get user details
@@ -61,53 +64,83 @@ export default function User({ navigation }) {
   useEffect(() => {}, []);
 
   return (
-    <ScrollView>
-      <Grid style={{ padding: 20 }}>
-        <Row style={mainStyles.verticalRowMargin}>
-          <Col style={mainStyles.alignItems}>
-            <Text style={mainStyles.text}>{'Name: '}</Text>
-          </Col>
-          <Col>
-            <Text style={mainStyles.text}>{UserDetails.name}</Text>
-          </Col>
-        </Row>
-        <Row style={mainStyles.verticalRowMargin}>
-          <Col style={mainStyles.alignItems}>
-            <Text style={mainStyles.text}>{'Role: '}</Text>
-          </Col>
-          <Col>
-            <Text style={mainStyles.text}>{UserDetails.role_name}</Text>
-          </Col>
-        </Row>
-        <Row style={mainStyles.verticalRowMargin}>
-          <Col style={mainStyles.alignItems}>
-            <Text style={mainStyles.text}>{'Email: '}</Text>
-          </Col>
-          <Col>
-            <Text style={mainStyles.text}>{UserDetails.email}</Text>
-          </Col>
-        </Row>
-        <Row style={mainStyles.verticalRowMargin}>
-          <Col style={mainStyles.alignItems}>
-            <Text style={mainStyles.text}>{'Phone: '}</Text>
-          </Col>
-          <Col>
-            <Text style={mainStyles.text}>{UserDetails.phone}</Text>
-          </Col>
-        </Row>
-        <Row style={mainStyles.verticalRowMargin}>
-          <Col style={mainStyles.alignItems}>
-            <Text style={mainStyles.text}>{'Company: '}</Text>
-          </Col>
-          <Col>
-            <Text style={mainStyles.text}>{UserDetails.company_name}</Text>
-          </Col>
-        </Row>
+    <>
+      <Header
+        statusBarProps={{ barStyle: 'default' }}
+        backgroundColor={'red'}
+        leftComponent={{
+          icon: 'chevron-left',
+          color: '#fff',
+          onPress: () => navigation.navigate('AppSolutions'),
+        }}
+        centerComponent={{
+          text: 'Novedades activas',
+          style: {
+            color: '#fff',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+          },
+        }}
+      />
+      <ScrollView>
+        <Grid style={{ padding: 20 }}>
+          <Row style={[mainStyles.centerContent, { marginBottom: 40 }]}>
+            <Image
+              source={noProfileImage}
+              style={{ height: 200, width: 200 }}
+            />
+          </Row>
+          <Row style={mainStyles.verticalRowMargin}>
+            <Col style={mainStyles.alignItems}>
+              <Text style={mainStyles.text}>{'Name: '}</Text>
+            </Col>
+            <Col>
+              <Text style={mainStyles.text}>{UserDetails.name}</Text>
+            </Col>
+          </Row>
+          <Row style={mainStyles.verticalRowMargin}>
+            <Col style={mainStyles.alignItems}>
+              <Text style={mainStyles.text}>{'Role: '}</Text>
+            </Col>
+            <Col>
+              <Text style={mainStyles.text}>{UserDetails.role_name}</Text>
+            </Col>
+          </Row>
+          <Row style={mainStyles.verticalRowMargin}>
+            <Col style={mainStyles.alignItems}>
+              <Text style={mainStyles.text}>{'Email: '}</Text>
+            </Col>
+            <Col>
+              <Text style={mainStyles.text}>{UserDetails.email}</Text>
+            </Col>
+          </Row>
+          <Row style={mainStyles.verticalRowMargin}>
+            <Col style={mainStyles.alignItems}>
+              <Text style={mainStyles.text}>{'Phone: '}</Text>
+            </Col>
+            <Col>
+              <Text style={mainStyles.text}>{UserDetails.phone}</Text>
+            </Col>
+          </Row>
+          <Row style={mainStyles.verticalRowMargin}>
+            <Col style={mainStyles.alignItems}>
+              <Text style={mainStyles.text}>{'Company: '}</Text>
+            </Col>
+            <Col>
+              <Text style={mainStyles.text}>{UserDetails.company_name}</Text>
+            </Col>
+          </Row>
 
-        <Row style={mainStyles.centerContent}>
-          <CustomButton title={'Cerrar sesion'} onPress={() => logout()} />
-        </Row>
-      </Grid>
-    </ScrollView>
+          <Row style={mainStyles.centerContent}>
+            <CustomButton
+              transparent={false}
+              title={'Cerrar sesion'}
+              onPress={() => logout()}
+              style={{ backgroundColor: 'red' }}
+            />
+          </Row>
+        </Grid>
+      </ScrollView>
+    </>
   );
 }

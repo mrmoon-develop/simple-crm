@@ -12,25 +12,25 @@ export default function MyTextInput(props) {
       style={{ alignItems: 'center' }}
       containerStyle={{
         marginBottom: 20,
-        borderBottomColor: color.LIGHTPRIMARYCOLOR,
-        borderBottomWidth: 1,
+        // borderBottomColor: color.GRAY,
+        // borderBottomWidth: 1,
       }}
       inputStyle={{
         fontSize: 18,
         paddingVertical: 10,
         paddingHorizontal: 8,
         marginTop: 12,
-        color: color.PRIMARYCOLOR,
+        color: color.BLACK,
         // fontFamily: 'Poppins-Light',
       }}
-      placeholderTextColor={color.LIGHTPRIMARYCOLOR}
+      placeholderTextColor={color.GRAY}
       underlineColorAndroid={'transparent'}
       placeholder={props.placeholder}
       leftIconContainerStyle={{ marginLeft: 0 }}
       leftIcon={
         <Icon
           size={24}
-          color={color.PRIMARYCOLOR}
+          color={color.RED}
           // type={'font-awesome'}
           name={props.image}
         />
@@ -44,7 +44,7 @@ export default function MyTextInput(props) {
           >
             <Image
               style={styles.btnImage}
-              tintColor={color.PRIMARYCOLOR}
+              tintColor={color.GRAY}
               source={props.secureTextEntry ? EyeOpened : EyeClosed}
             />
           </TouchableOpacity>

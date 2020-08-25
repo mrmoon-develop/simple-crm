@@ -10,10 +10,21 @@ export default {
   getActiveIssues: () =>
     Axios.get(`${BASE_URL}/getActiveIssues`, {
       headers: HEADERS,
-    }).then((res) => res.data),
+    })
+      .then((res) => res.data)
+      .catch((err) => err),
 
   getFinishedIssues: () =>
     Axios.get(`${BASE_URL}/getFinishedIssues`, {
       headers: HEADERS,
-    }).then((res) => res.data),
+    })
+      .then((res) => res.data)
+      .catch((err) => err),
+
+  createIssue: (payload) =>
+    Axios.post(`${BASE_URL}/createIssue`, payload, {
+      headers: HEADERS,
+    })
+      .then((res) => res.data)
+      .catch((err) => err),
 };

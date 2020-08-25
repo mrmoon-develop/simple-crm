@@ -19,4 +19,6 @@ export default {
 
     return res;
   },
+
+  isNullOrEmpty: (item) => item == null || item == undefined || item == '',
 };

@@ -63,7 +63,7 @@ const Login = ({ navigation }) => {
       keyboardShouldPersistTaps="always"
     >
       <View style={[loginStyles.container, { padding: 20 }]}>
-        <StatusBar backgroundColor={Color.BLUE} translucent={true} />
+        <StatusBar backgroundColor={Color.RED} translucent={true} />
 
         <View style={loginStyles.logo}>
           <Image source={SolveTicLogo} style={{ height: 250, width: 250 }} />
@@ -84,7 +84,11 @@ const Login = ({ navigation }) => {
           onPress={() => setHidePassword(!hidePassword)}
           onChangeText={(text) => setPassword(text)}
         />
-        <CustomButton title={'Login'} onPress={() => userLogin()} />
+        <CustomButton
+          title={'Login'}
+          onPress={() => userLogin()}
+          style={{ backgroundColor: Color.RED }}
+        />
         {/* <View style={loginStyles.btnTransparent}>
           <TouchableOpacity>
             <Text style={[loginStyles.btnText, { color: color.Blue }]}>

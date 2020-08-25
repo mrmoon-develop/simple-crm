@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import color from './colors';
+import colors from './colors';
 
 //Estilos para SplashScreen
 const splashStyles = StyleSheet.create({
@@ -28,8 +29,8 @@ const loginStyles = StyleSheet.create({
     width: 280,
     marginTop: 40,
     marginBottom: 20,
-    backgroundColor: color.BLUE,
     borderRadius: 60,
+    fontWeight: 'bold',
   },
 
   btnTransparent: {
@@ -66,7 +67,7 @@ const mainStyles = StyleSheet.create({
   text: {
     textAlign: 'center',
     fontSize: 20,
-    color: color.BLUE,
+    color: color.GRAY,
     // paddingVertical: 15,
   },
   centerContent: {
@@ -80,8 +81,63 @@ const mainStyles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
+  userDetailsContainer: {
+    textAlign: 'left',
+    height: 20,
+  },
+  userDetailsText: {
+    color: colors.WHITE,
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  overlayText: {
+    color: 'black',
+    fontSize: 30,
+  },
+});
+
+const newIssueFormStyles = StyleSheet.create({
+  headerContainer: {
+    backgroundColor: colors.RED,
+    padding: 30,
+    borderBottomRightRadius: 20,
+  },
+  headerText: {
+    color: colors.WHITE,
+    fontWeight: 'bold',
+    fontSize: 30,
+  },
+  marginVertical: {
+    marginVertical: 10,
+  },
+  fieldText: {
+    marginTop: 10,
+    marginBottom: 10,
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  centerColItems: {
+    alignItems: 'center',
+  },
+  sectionHeader: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  textArea: {
+    height: 150,
+    justifyContent: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 20,
+  },
 });
 
 const userStyles = StyleSheet.create({});
 
-export { mainStyles, userStyles, loginStyles, splashStyles };
+export {
+  mainStyles,
+  userStyles,
+  loginStyles,
+  splashStyles,
+  newIssueFormStyles,
+};
