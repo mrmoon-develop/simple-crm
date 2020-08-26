@@ -129,12 +129,47 @@ const newIssueFormStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     padding: 20,
+    marginBottom: 20,
   },
 });
 
 const userStyles = StyleSheet.create({});
+const pollStyles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 25,
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: '100',
+  },
+  rowPicker: {
+    borderWidth: 1,
+    borderRadius: 15,
+    marginBottom: 30,
+  },
+  row: {
+    marginBottom: 30,
+  },
+  center: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  textArea: {
+    height: 150,
+    justifyContent: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+  },
+});
 
 export {
+  pollStyles,
   mainStyles,
   userStyles,
   loginStyles,

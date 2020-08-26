@@ -24,7 +24,7 @@ import IssuesServices from '../../services/issues';
 import utils from '../../utils';
 
 //Hook for react navigation
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, CommonActions } from '@react-navigation/native';
 import { newIssueFormStyles } from '../../styles/styles';
 
 var { height, width } = Dimensions.get('window');
@@ -93,6 +93,7 @@ const ActiveIssues = ({ navigation }) => {
       getActiveIssues();
       return () => {
         setIssues([]);
+
         // Do something when the screen is unfocused
         // Useful for cleanup functions
       };
@@ -100,7 +101,7 @@ const ActiveIssues = ({ navigation }) => {
   );
 
   return (
-    <View>
+    <>
       <Header
         statusBarProps={{ barStyle: 'default' }}
         backgroundColor={'red'}
@@ -129,12 +130,9 @@ const ActiveIssues = ({ navigation }) => {
       >
         Toca una novedad para visualizarla
       </Text>
-      <ScrollView horizontal={true}>
+      <ScrollView horizontal={true} style={{ marginVertical: 10 }}>
         <View
-          // onLayout={(event) => _onLayout(event)}
           style={{
-            // backgroundColor: 'green',
-            height: layout.height - 10,
             width: layout.width - 10,
             margin: 5,
           }}
@@ -142,7 +140,6 @@ const ActiveIssues = ({ navigation }) => {
           <Table borderStyle={{ borderColor: '#C1C0B9' }}>
             <Row
               data={headers}
-              // widthArr={widthArr}
               style={styles.head}
               textStyle={styles.textHeader}
             />
@@ -153,7 +150,13 @@ const ActiveIssues = ({ navigation }) => {
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    navigation.navigate('New Issue', { issueId: dataRow[0] });
+                    console.log('dataRow[0]', dataRow[0]);
+                    // navigation.navigate('Edit Issue', { issueId: dataRow[0] });
+                    navigation.dispatch(
+                      CommonActions.navigate('Edit Issue', {
+                        issueId: dataRow[0],
+                      })
+                    );
                   }}
                 >
                   <Row
@@ -171,7 +174,7 @@ const ActiveIssues = ({ navigation }) => {
           </ScrollView>
         </View>
       </ScrollView>
-    </View>
+    </>
   );
 };
 

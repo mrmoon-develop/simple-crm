@@ -18,6 +18,7 @@ import { UserContext } from '../../../context/userContext';
 
 //Components
 import CustomTextInputForm from '../../../components/CustomTextInputForm/CustomTextInputForm';
+import { Header } from 'react-native-elements';
 
 //Image picker
 import * as ImagePicker from 'expo-image-picker';
@@ -26,7 +27,6 @@ import * as Permissions from 'expo-permissions';
 
 //Services
 import issueServices from '../../../services/issues';
-import { Header } from 'react-native-elements';
 
 const NewIssue = ({ route, navigation }) => {
   const [login, loginAction] = useContext(UserContext);
@@ -239,7 +239,7 @@ const NewIssue = ({ route, navigation }) => {
 
           <Row>
             <Col>
-              <Text>Evidences:{'\n'}</Text>
+              <Text>Evidencias:{'\n'}</Text>
             </Col>
           </Row>
 

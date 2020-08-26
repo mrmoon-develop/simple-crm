@@ -7,13 +7,18 @@ const HEADERS = {
 };
 
 export default {
+  getUser: (id) =>
+    Axios.get(`${BASE_URL}/getUser${id}`, {
+      headers: HEADERS,
+    }).then((res) => res.data),
+
   getUsers: () =>
     Axios.get(`${BASE_URL}/getUsers`, {
       headers: HEADERS,
     }).then((res) => res.data),
 
-  getUser: (id) =>
-    Axios.get(`${BASE_URL}/getUser${id}`, {
+  getTechnicalUsers: () =>
+    Axios.get(`${BASE_URL}/getTechnicalUsers`, {
       headers: HEADERS,
     }).then((res) => res.data),
 };

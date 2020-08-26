@@ -7,6 +7,13 @@ const HEADERS = {
 };
 
 export default {
+  getIssue: (issueId) =>
+    Axios.get(`${BASE_URL}/getIssue/${issueId}`, {
+      headers: HEADERS,
+    })
+      .then((res) => res.data)
+      .catch((err) => err),
+
   getActiveIssues: () =>
     Axios.get(`${BASE_URL}/getActiveIssues`, {
       headers: HEADERS,
@@ -23,6 +30,13 @@ export default {
 
   createIssue: (payload) =>
     Axios.post(`${BASE_URL}/createIssue`, payload, {
+      headers: HEADERS,
+    })
+      .then((res) => res.data)
+      .catch((err) => err),
+
+  updateIssue: (payload) =>
+    Axios.put(`${BASE_URL}/updateIssue`, payload, {
       headers: HEADERS,
     })
       .then((res) => res.data)
