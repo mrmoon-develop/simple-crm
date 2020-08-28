@@ -21,4 +21,9 @@ export default {
     Axios.get(`${BASE_URL}/getTechnicalUsers`, {
       headers: HEADERS,
     }).then((res) => res.data),
+
+  createUser: (payload) =>
+    Axios.post(`${BASE_URL}/createUser`, payload, {
+      headers: HEADERS,
+    }).then((res) => res.data),
 };

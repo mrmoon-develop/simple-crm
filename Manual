@@ -1,0 +1,28 @@
+Todo en espanol
+
+
+Una nueva columna para el usuario tecnico en novedades activas
+
+Cambiar nombre de opcion pqrs a informes y creacion de informes personalizados.
+El usuario tecnico tambien puede generar informes
+
+
+-- Manual -- 
+Nvm for windows
+    - nvm install latest/stable 
+    - nvm use latest/stable
+    - npm install -g react-native --save
+    - npm install -g expo-cli
+    - Pararse en la carpeta del proyecto en la terminal y ejecutar: npm install
+        - Realizar el proceso para backend y front end
+    -npm start en ambos proyectos
+
+MariaDb
+    - Crear un usuario para la app
+    - Te paso el SQL que crea la base de datos
+
+Visual Studio Code
+    - Descargar e instalar
+
+Dbeaver
+    - Descargar e instalar

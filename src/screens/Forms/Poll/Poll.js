@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 //Components
 import { ScrollView, Picker, TextInput, Button } from 'react-native';
@@ -8,7 +8,22 @@ import { Text, Header } from 'react-native-elements';
 //Styles
 import { pollStyles } from '../../../styles/styles';
 
-const Poll = ({ navigation }) => {
+//Services
+import PollServices from '../../../services/polls';
+
+//React navigation hooks
+import { useFocusEffect } from '@react-navigation/native';
+
+//Context reducer
+import { UserContext } from '../../../context/userContext';
+
+const Poll = ({ route, navigation }) => {
+  //Login context
+  const [login, loginAction] = useContext(UserContext);
+
+  //Enable form
+  const [enabled, setEnabled] = useState(false);
+
   //Form inputs
   const [questions, setQuestions] = useState({
     q1: 0,
@@ -34,6 +49,46 @@ const Poll = ({ navigation }) => {
 
     console.log('formatRequest', formatRequest);
   };
+
+  /**
+   * Get poll details by issue
+   */
+  const getPollDetails = (issueId) => {
+    PollServices.getPollByIssue(issueId)
+      .then((res) => {
+        switch (res.code) {
+          case 200:
+            console.log('res.data', res.data);
+            setQuestions(res.data);
+            setEnabled(false);
+            break;
+
+          default:
+            setEnabled(true);
+            break;
+        }
+      })
+      .catch((err) => {
+        console.log('err', err);
+        ToastAndroid.show('Error' + err, ToastAndroid.SHORT);
+      });
+  };
+
+  /**
+   * Component did mount with react navigation for component focus
+   */
+  useFocusEffect(
+    React.useCallback(() => {
+      //Do somthing when the screen is focused
+      getPollDetails(route.params.issueId);
+      // getTechnicalUsers();
+      return () => {
+        // route.params.issueId = null;
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, [route.params.issueId])
+  );
 
   return (
     <>
@@ -70,6 +125,7 @@ const Poll = ({ navigation }) => {
 
           <Row style={pollStyles.rowPicker}>
             <Picker
+              enabled={enabled}
               style={{ height: 50, width: 350 }}
               selectedValue={questions.q1}
               onValueChange={(itemValue, itemIndex) => {
@@ -89,6 +145,7 @@ const Poll = ({ navigation }) => {
 
           <Row style={pollStyles.rowPicker}>
             <Picker
+              enabled={enabled}
               style={{ height: 50, width: 350 }}
               selectedValue={questions.q2}
               onValueChange={(itemValue, itemIndex) => {
@@ -108,6 +165,7 @@ const Poll = ({ navigation }) => {
 
           <Row style={pollStyles.rowPicker}>
             <Picker
+              enabled={enabled}
               style={{ height: 50, width: 350 }}
               selectedValue={questions.q3}
               onValueChange={(itemValue, itemIndex) => {
@@ -127,6 +185,7 @@ const Poll = ({ navigation }) => {
 
           <Row style={pollStyles.rowPicker}>
             <Picker
+              enabled={enabled}
               style={{ height: 50, width: 350 }}
               selectedValue={questions.q4}
               onValueChange={(itemValue, itemIndex) => {
@@ -146,6 +205,7 @@ const Poll = ({ navigation }) => {
 
           <Row style={pollStyles.rowPicker}>
             <Picker
+              enabled={enabled}
               style={{ height: 50, width: 350 }}
               selectedValue={questions.q5}
               onValueChange={(itemValue, itemIndex) => {
@@ -167,6 +227,7 @@ const Poll = ({ navigation }) => {
                 placeholderTextColor="grey"
                 numberOfLines={10}
                 multiline={true}
+                editable={enabled}
                 onChangeText={(text) => {
                   setQuestions({ ...questions, comment: text });
                 }}
@@ -176,11 +237,19 @@ const Poll = ({ navigation }) => {
           </Row>
 
           <Row style={[pollStyles.row, pollStyles.center]}>
-            <Button
-              title={'Calificar'}
-              color={'red'}
-              onPress={() => handleSave()}
-            />
+            {enabled && login.user.type == 1 ? (
+              <Button
+                title={'Calificar'}
+                color={'red'}
+                onPress={() => handleSave()}
+              />
+            ) : (
+              <Button
+                title={'Atras'}
+                color={'gray'}
+                onPress={() => navigation.goBack()}
+              />
+            )}
           </Row>
         </Grid>
       </ScrollView>

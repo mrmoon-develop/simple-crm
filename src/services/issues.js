@@ -41,4 +41,11 @@ export default {
     })
       .then((res) => res.data)
       .catch((err) => err),
+
+  getActiveIssuesByCustomer: (id) =>
+    Axios.get(`${BASE_URL}/getActiveIssuesByCustomer/${id}`, {
+      headers: HEADERS,
+    })
+      .then((res) => res.data)
+      .catch((err) => err),
 };

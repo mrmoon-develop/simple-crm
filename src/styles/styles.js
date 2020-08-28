@@ -166,6 +166,9 @@ const pollStyles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
   },
+  marginVertical: {
+    marginVertical: 10,
+  },
 });
 
 export {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 //Components
 import {
@@ -21,17 +21,24 @@ import { newIssueFormStyles } from '../../../styles/styles';
 import IssuesServices from '../../../services/issues';
 import UserServices from '../../../services/users';
 
+//Context reducer
+import { UserContext } from '../../../context/userContext';
+
 const EditIssue = ({ route, navigation }) => {
+  //Login context
+  const [login, loginAction] = useContext(UserContext);
+
   //Issue details
   const [issueDetails, setIssueDetails] = useState({
     customer_name: '',
     company_name: '',
     email: '',
     phone: '',
+    attender_id: '',
   });
   //Technical Users
   const [technicalUsers, setTechnicalUsers] = useState([]);
-  const [selectedTechnical, setSelectedTechnical] = useState('');
+  const [editable, setEditable] = useState(false);
 
   /**
    * Get issue details
@@ -61,13 +68,6 @@ const EditIssue = ({ route, navigation }) => {
       .then((res) => {
         switch (res.code) {
           case 200:
-            // var technicalUsersWithFunction = res.data.map((technical) => ({
-            //   ...technical,
-            //   onPress: () => {
-            //     console.log('technical', technical);
-            //     setSelectedTechnical(technical);
-            //   },
-            // }));
             setTechnicalUsers(res.data);
             break;
 
@@ -113,6 +113,13 @@ const EditIssue = ({ route, navigation }) => {
   };
 
   /**
+   * Handle rate issue
+   */
+  const handleRate = () => {
+    navigation.navigate('Poll', { issueId: issueDetails.id });
+  };
+
+  /**
    * Component did mount with react navigation for component focus
    */
   useFocusEffect(
@@ -120,6 +127,11 @@ const EditIssue = ({ route, navigation }) => {
       //Do somthing when the screen is focused
       getIssueDetails(route.params.issueId);
       getTechnicalUsers();
+
+      if (login.user.type == 2 && issueDetails.state != 'F') {
+        setEditable(true);
+      }
+
       return () => {
         setIssueDetails({});
         // route.params.issueId = null;
@@ -142,7 +154,7 @@ const EditIssue = ({ route, navigation }) => {
           },
         }}
         centerComponent={{
-          text: 'Editar novedad',
+          text: editable ? 'Editar novedad' : 'Visualizar novedad',
           style: {
             color: '#fff',
             fontWeight: 'bold',
@@ -218,6 +230,7 @@ const EditIssue = ({ route, navigation }) => {
               <Text style={newIssueFormStyles.fieldText}>Prioridad:</Text>
               <Picker
                 selectedValue={issueDetails.priority}
+                enabled={editable}
                 onValueChange={(itemValue, itemIndex) => {
                   setIssueDetails({ ...issueDetails, priority: itemValue });
                 }}
@@ -255,6 +268,7 @@ const EditIssue = ({ route, navigation }) => {
                 placeholderTextColor="grey"
                 numberOfLines={10}
                 multiline={true}
+                editable={editable}
                 onChangeText={(text) => {
                   setIssueDetails({ ...issueDetails, response: text });
                 }}
@@ -271,6 +285,7 @@ const EditIssue = ({ route, navigation }) => {
               <Picker
                 selectedValue={issueDetails.attender_id}
                 style={{ height: 50, width: 150 }}
+                enabled={editable}
                 onValueChange={(itemValue, itemIndex) => {
                   setIssueDetails({ ...issueDetails, attender_id: itemValue });
                 }}
@@ -336,17 +351,35 @@ const EditIssue = ({ route, navigation }) => {
                 onPress={() => navigation.goBack()}
               />
             </Col>
-            <Col
-              style={{
-                marginHorizontal: 5,
-              }}
-            >
-              <Button
-                title={'Guardar'}
-                color={'red'}
-                onPress={() => handleSave()}
-              />
-            </Col>
+
+            {issueDetails.state == 'F' ? (
+              <Col
+                style={{
+                  marginHorizontal: 5,
+                }}
+              >
+                <Button
+                  title={'Encuesta'}
+                  color={'red'}
+                  onPress={() => handleRate()}
+                />
+              </Col>
+            ) : (
+              editable && (
+                <Col
+                  style={{
+                    marginHorizontal: 5,
+                  }}
+                >
+                  <Button
+                    title={'Guardar'}
+                    color={'red'}
+                    disabled={issueDetails.state == 'F'}
+                    onPress={() => handleSave()}
+                  />
+                </Col>
+              )
+            )}
           </Row>
         </Grid>
       </ScrollView>

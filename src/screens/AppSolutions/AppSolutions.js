@@ -22,17 +22,15 @@ import ActiveIssuesImg from '../../resources/images/app-solutions-view/active-is
 import PQRImg from '../../resources/images/app-solutions-view/pqr.png';
 import ClosedIssuesImg from '../../resources/images/app-solutions-view/closed-issues.png';
 import utils from '../../utils';
-import { Header, Overlay, Button } from 'react-native-elements';
+import { Header, Overlay, Button, Badge } from 'react-native-elements';
 
 //Resources
 import noProfileImage from '../../resources/images/no-profile-img.png';
 import CustomButton from '../../components/CustomButton/CustomButton';
 
-// import AppSolutions from './views/AppSolutions/AppSolutions';
-// import NewIssue from '../Forms/NewIssue/NewIssue';
-// import ActiveISsues from '../ActiveIssues/ActiveIssues';
-// import Poll from '../Forms/Poll/Poll';
-// import CloseIssues from '../CloseIssues/CloseIssues';
+//Services
+import IssuesServices from '../../services/issues';
+import { useFocusEffect } from '@react-navigation/native';
 
 const NewIssueButton = ({ navigation }) => {
   return (
@@ -50,17 +48,16 @@ const NewIssueButton = ({ navigation }) => {
             alignSelf: 'center',
           }}
         />
-        <Text style={styles.alignCenter}>New Issue {'\n'}</Text>
+        <Text style={styles.alignCenter}>Nueva Incidencia {'\n'}</Text>
         <Text style={styles.alignCenter}>
-          Need help? Choose service's category and send details to our technical
-          support team.
+          Envie su caso a nuestro equipo de soporte tecnico.
         </Text>
       </View>
     </TouchableHighlight>
   );
 };
 
-const ActiveIssuesButton = ({ navigation }) => {
+const ActiveIssuesButton = ({ navigation, activeIssues }) => {
   return (
     <TouchableHighlight
       onPress={() => navigation.navigate('Active Issues')}
@@ -68,24 +65,27 @@ const ActiveIssuesButton = ({ navigation }) => {
       style={{ padding: 20 }}
     >
       <View style={styles.center}>
+        <Badge
+          status="success"
+          containerStyle={{ position: 'absolute', top: 0, right: 20 }}
+          // textStyle={{ fontSize: 40 }}
+          value={activeIssues}
+        />
         <Image
           source={ActiveIssuesImg}
           style={{ width: 100, height: 100, alignSelf: 'center' }}
         />
-        <Text style={styles.alignCenter}>Active Issues {'\n'}</Text>
-        <Text style={styles.alignCenter}>
-          Check your active issues, check progress, add comments, attach extra
-          data, understand solution.
-        </Text>
+        <Text style={styles.alignCenter}>Incidencias Activas {'\n'}</Text>
+        <Text style={styles.alignCenter}>Revise sus peticiones en curso</Text>
       </View>
     </TouchableHighlight>
   );
 };
 
-const PQRButton = ({ navigation }) => {
+const Reports = ({ navigation }) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate('New Issue')}
+      onPress={() => navigation.navigate('Reports')}
       underlayColor="white"
       style={{ padding: 20 }}
     >
@@ -94,10 +94,8 @@ const PQRButton = ({ navigation }) => {
           source={PQRImg}
           style={{ width: 100, height: 100, alignSelf: 'center' }}
         />
-        <Text style={styles.alignCenter}>PQR {'\n'}</Text>
-        <Text style={styles.alignCenter}>
-          Petitions, claims and rosources as frecuently questions from users.
-        </Text>
+        <Text style={styles.alignCenter}>Informes {'\n'}</Text>
+        <Text style={styles.alignCenter}>Informes y documentos</Text>
       </View>
     </TouchableHighlight>
   );
@@ -115,10 +113,8 @@ const ClosedIssuesButton = ({ navigation }) => {
           source={ClosedIssuesImg}
           style={{ width: 100, height: 100, alignSelf: 'center' }}
         />
-        <Text style={styles.alignCenter}>Closed Issues {'\n'}</Text>
-        <Text style={styles.alignCenter}>
-          Here you can check finished issues.
-        </Text>
+        <Text style={styles.alignCenter}>Incidencias cerradas {'\n'}</Text>
+        <Text style={styles.alignCenter}>Revise sus incidencias cerradas</Text>
       </View>
     </TouchableHighlight>
   );
@@ -207,31 +203,79 @@ const UserDetails = ({ navigation }) => {
         </Grid>
       </Overlay>
     </>
-    // <TouchableOpacity
-    //   onPress={() => navigation.navigate('Profile')}
-    //   underlayColor="white"
-    //   style={{ padding: 30 }}
-    // >
-    //   <View style={[mainStyles.userDetailsContainer]}>
-    //     <Text style={mainStyles.userDetailsText}>
-    //       Bienvenido{' '}
-    //       {utils.isNullOrEmpty(UserDetails.name) && !UserDetails.name
-    //         ? ''
-    //         : UserDetails.name}
-    //     </Text>
-    //     <Text style={mainStyles.userDetailsText}>{UserDetails.role_name}</Text>
-    //     <Text style={mainStyles.userDetailsText}>
-    //       {utils.isNullOrEmpty(UserDetails.company_name) &&
-    //       !UserDetails.company_name
-    //         ? ''
-    //         : UserDetails.company_name}
-    //     </Text>
-    //   </View>
-    // </TouchableOpacity>
   );
 };
 
 const AppSolutions = ({ navigation }) => {
+  //Login context
+  const [login, loginAction] = useContext(UserContext);
+
+  const [activeIssues, setActiveIssues] = useState();
+
+  /**
+   * Get active issues by customer id
+   * @param {Number} customerId identifies customer
+   */
+  const getActiveIssuesByCustomer = (customerId) => {
+    IssuesServices.getActiveIssuesByCustomer(customerId)
+      .then((res) => {
+        switch (res.code) {
+          case 200:
+            console.log('res.data.length', res.data.length);
+            setActiveIssues(res.data.length);
+            break;
+
+          default:
+            setActiveIssues([]);
+            ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+            break;
+        }
+      })
+      .catch((err) => {
+        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        console.log('err', err);
+      });
+  };
+
+  /**
+   * Get general active issues
+   */
+  const getActiveIssues = () => {
+    IssuesServices.getActiveIssues()
+      .then((res) => {
+        switch (res.code) {
+          case 200:
+            console.log('res.data.length', res.data.length);
+            setActiveIssues(res.data.length);
+            break;
+
+          default:
+            setActiveIssues([]);
+            ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+            break;
+        }
+      })
+      .catch((err) => {
+        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        console.log('err', err);
+      });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('login.user.type', login.user.type);
+      if (login.user.type == 1) {
+        getActiveIssuesByCustomer(login.user.id);
+      } else {
+        getActiveIssues();
+      }
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, [])
+  );
+
   return (
     <>
       <UserDetails navigation={navigation} />
@@ -241,13 +285,18 @@ const AppSolutions = ({ navigation }) => {
             <NewIssueButton navigation={navigation} />
           </Col>
           <Col>
-            <ActiveIssuesButton navigation={navigation} />
+            <View>
+              <ActiveIssuesButton
+                navigation={navigation}
+                activeIssues={activeIssues}
+              />
+            </View>
           </Col>
         </Row>
 
         <Row>
           <Col>
-            <PQRButton navigation={navigation} />
+            <Reports navigation={navigation} />
           </Col>
           <Col>
             <ClosedIssuesButton navigation={navigation} />

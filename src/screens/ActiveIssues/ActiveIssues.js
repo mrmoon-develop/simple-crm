@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   Text,
@@ -25,75 +25,97 @@ import utils from '../../utils';
 
 //Hook for react navigation
 import { useFocusEffect, CommonActions } from '@react-navigation/native';
-import { newIssueFormStyles } from '../../styles/styles';
+
+//Context reducer
+import { UserContext } from '../../context/userContext';
 
 var { height, width } = Dimensions.get('window');
 
 const ActiveIssues = ({ navigation }) => {
-  const [widthArr, setWidthArr] = useState([
-    40,
-    60,
-    80,
-    100,
-    120,
-    140,
-    160,
-    180,
-    200,
+  //Login context
+  const [login, loginAction] = useContext(UserContext);
+
+  const [headers, setHeaders] = useState([
+    'ID',
+    'Título',
+    'Compañia',
+    'Estado',
+    'Prioridad',
   ]);
-  const [headers, setHeaders] = useState(['ID', 'Title', 'State', 'Priority']);
-  const [issues, setIssues] = useState([
-    [1, 'Prueba', 'Assigned', 'Medium'],
-    [2, 'Prueba', 'Assigned', 'Medium'],
-  ]);
+  const [issues, setIssues] = useState([]);
 
   const [layout, setLayout] = useState({
     height: height,
     width: width,
   });
 
-  const _onLayout = (event) => {
-    console.log(
-      '------------------------------------------------' +
-        JSON.stringify(event.nativeEvent.layout)
-    );
+  /**
+   * Get general active issues
+   */
+  const getActiveIssues = () => {
+    IssuesServices.getActiveIssues()
+      .then((res) => {
+        switch (res.code) {
+          case 200:
+            var issuesArray = utils.jsonArrayToArray(res.data);
+            setIssues(issuesArray);
+            break;
 
-    // console.log('layout', layout);
-
-    setLayout({
-      height: event.nativeEvent.layout.height,
-      width: event.nativeEvent.layout.width,
-    });
+          default:
+            setIssues([]);
+            ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+            break;
+        }
+      })
+      .catch((err) => {
+        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        console.log('err', err);
+      });
   };
 
-  const getActiveIssues = () => {
-    IssuesServices.getActiveIssues().then((res) => {
-      switch (res.code) {
-        case 200:
-          var issuesArray = utils.jsonArrayToArray(res.data);
-          // console.log('Object.keys(res.data[0])', Object.keys(res.data[0]));
-          // setHeaders(Object.keys(res.data[0]));
-          setIssues(issuesArray);
-          break;
+  /**
+   * Get active issues by customer id
+   * @param {Number} customerId identifies customer
+   */
+  const getActiveIssuesByCustomer = (customerId) => {
+    IssuesServices.getActiveIssuesByCustomer(customerId)
+      .then((res) => {
+        switch (res.code) {
+          case 200:
+            var issuesArray = utils.jsonArrayToArray(res.data);
+            setIssues(issuesArray);
+            break;
 
-        default:
-          setIssues([]);
-          ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
-          break;
-      }
-    });
+          default:
+            setIssues([]);
+            ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+            break;
+        }
+      })
+      .catch((err) => {
+        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        console.log('err', err);
+      });
   };
 
   useEffect(() => {
-    getActiveIssues();
+    console.log('login.user.type', login.user.type);
+    if (login.user.type == 1) {
+      getActiveIssuesByCustomer(login.user.id);
+    } else {
+      getActiveIssues();
+    }
   }, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      getActiveIssues();
+      console.log('login.user.type', login.user.type);
+      if (login.user.type == 1) {
+        getActiveIssuesByCustomer(login.user.id);
+      } else {
+        getActiveIssues();
+      }
       return () => {
-        setIssues([]);
-
         // Do something when the screen is unfocused
         // Useful for cleanup functions
       };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   Text,
@@ -24,23 +24,17 @@ import IssuesServices from '../../services/issues';
 import utils from '../../utils';
 
 //Hook for react navigation
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, CommonActions } from '@react-navigation/native';
 import { newIssueFormStyles } from '../../styles/styles';
+
+//Context reducer
+import { UserContext } from '../../context/userContext';
 
 var { height, width } = Dimensions.get('window');
 
 const ActiveIssues = ({ navigation }) => {
-  const [widthArr, setWidthArr] = useState([
-    40,
-    60,
-    80,
-    100,
-    120,
-    140,
-    160,
-    180,
-    200,
-  ]);
+  //Login context
+  const [login, loginAction] = useContext(UserContext);
   const [headers, setHeaders] = useState(['ID', 'Title', 'State', 'Priority']);
   const [issues, setIssues] = useState([
     [1, 'Prueba', 'Assigned', 'Medium'],
@@ -52,28 +46,12 @@ const ActiveIssues = ({ navigation }) => {
     width: width,
   });
 
-  const _onLayout = (event) => {
-    console.log(
-      '------------------------------------------------' +
-        JSON.stringify(event.nativeEvent.layout)
-    );
-
-    // console.log('layout', layout);
-
-    setLayout({
-      height: event.nativeEvent.layout.height,
-      width: event.nativeEvent.layout.width,
-    });
-  };
-
   const getClosedIssues = () => {
     IssuesServices.getFinishedIssues()
       .then((res) => {
         switch (res.code) {
           case 200:
             var issuesArray = utils.jsonArrayToArray(res.data);
-            // console.log('Object.keys(res.data[0])', Object.keys(res.data[0]));
-            // setHeaders(Object.keys(res.data[0]));
             setIssues(issuesArray);
             break;
 
@@ -96,7 +74,6 @@ const ActiveIssues = ({ navigation }) => {
     React.useCallback(() => {
       getClosedIssues();
       return () => {
-        setIssues([]);
         // Do something when the screen is unfocused
         // Useful for cleanup functions
       };
@@ -104,7 +81,7 @@ const ActiveIssues = ({ navigation }) => {
   );
 
   return (
-    <View>
+    <>
       <Header
         statusBarProps={{ barStyle: 'default' }}
         backgroundColor={'red'}
@@ -114,7 +91,7 @@ const ActiveIssues = ({ navigation }) => {
           onPress: () => navigation.navigate('AppSolutions'),
         }}
         centerComponent={{
-          text: 'Novedades finalizadas',
+          text: 'Novedades activas',
           style: {
             color: '#fff',
             fontWeight: 'bold',
@@ -133,12 +110,9 @@ const ActiveIssues = ({ navigation }) => {
       >
         Toca una novedad para visualizarla
       </Text>
-      <ScrollView horizontal={true}>
+      <ScrollView horizontal={true} style={{ marginVertical: 10 }}>
         <View
-          // onLayout={(event) => _onLayout(event)}
           style={{
-            // backgroundColor: 'green',
-            height: layout.height - 10,
             width: layout.width - 10,
             margin: 5,
           }}
@@ -146,7 +120,6 @@ const ActiveIssues = ({ navigation }) => {
           <Table borderStyle={{ borderColor: '#C1C0B9' }}>
             <Row
               data={headers}
-              // widthArr={widthArr}
               style={styles.head}
               textStyle={styles.textHeader}
             />
@@ -157,7 +130,13 @@ const ActiveIssues = ({ navigation }) => {
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    navigation.navigate('New Issue', { issueId: dataRow[0] });
+                    console.log('dataRow[0]', dataRow[0]);
+                    // navigation.navigate('Edit Issue', { issueId: dataRow[0] });
+                    navigation.dispatch(
+                      CommonActions.navigate('Edit Issue', {
+                        issueId: dataRow[0],
+                      })
+                    );
                   }}
                 >
                   <Row
@@ -175,7 +154,7 @@ const ActiveIssues = ({ navigation }) => {
           </ScrollView>
         </View>
       </ScrollView>
-    </View>
+    </>
   );
 };
 

@@ -150,7 +150,7 @@ const NewIssue = ({ route, navigation }) => {
               </Text>
             </Col>
             <Col style={newIssueFormStyles.centerColItems}>
-              <Text style={newIssueFormStyles.fieldText}>Empresa:</Text>
+              <Text style={newIssueFormStyles.fieldText}>Compañia:</Text>
               <Text>
                 {UserDetails.company_name}
                 {' \n'}
@@ -184,7 +184,7 @@ const NewIssue = ({ route, navigation }) => {
           />
 
           <Row style={{ marginBottom: 10 }}>
-            <Text style={newIssueFormStyles.sectionHeader}>Novedad</Text>
+            <Text style={newIssueFormStyles.sectionHeader}>Incidencia</Text>
           </Row>
 
           <Row>

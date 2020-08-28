@@ -8,6 +8,7 @@ import 'react-native-gesture-handler';
 
 import AuthStackNavigator from './navigators/AuthStackNavigator';
 import HomeStackNavigator from './navigators/HomeStackNavigator';
+
 import { UserProvider } from './context/userContext';
 
 const RootStack = createStackNavigator();
