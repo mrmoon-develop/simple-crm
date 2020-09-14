@@ -1,5 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, Image, ScrollView } from 'react-native';
+
+//Components
+import { Header } from 'react-native-elements';
+import { Text, Image, ScrollView } from 'react-native';
 
 //Resources
 import noProfileImage from '../../resources/images/no-profile-img.png';
@@ -18,7 +21,6 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 
 //Context reducer
 import { UserContext } from '../../context/userContext';
-import { Header } from 'react-native-elements';
 
 export default function User({ navigation }) {
   //Context
@@ -74,7 +76,7 @@ export default function User({ navigation }) {
           onPress: () => navigation.navigate('AppSolutions'),
         }}
         centerComponent={{
-          text: 'Novedades activas',
+          text: 'Mi perfil',
           style: {
             color: '#fff',
             fontWeight: 'bold',
@@ -92,7 +94,7 @@ export default function User({ navigation }) {
           </Row>
           <Row style={mainStyles.verticalRowMargin}>
             <Col style={mainStyles.alignItems}>
-              <Text style={mainStyles.text}>{'Name: '}</Text>
+              <Text style={mainStyles.text}>{'Nombre: '}</Text>
             </Col>
             <Col>
               <Text style={mainStyles.text}>{UserDetails.name}</Text>
@@ -100,7 +102,7 @@ export default function User({ navigation }) {
           </Row>
           <Row style={mainStyles.verticalRowMargin}>
             <Col style={mainStyles.alignItems}>
-              <Text style={mainStyles.text}>{'Role: '}</Text>
+              <Text style={mainStyles.text}>{'Rol: '}</Text>
             </Col>
             <Col>
               <Text style={mainStyles.text}>{UserDetails.role_name}</Text>
@@ -116,7 +118,7 @@ export default function User({ navigation }) {
           </Row>
           <Row style={mainStyles.verticalRowMargin}>
             <Col style={mainStyles.alignItems}>
-              <Text style={mainStyles.text}>{'Phone: '}</Text>
+              <Text style={mainStyles.text}>{'Telefono: '}</Text>
             </Col>
             <Col>
               <Text style={mainStyles.text}>{UserDetails.phone}</Text>
@@ -124,7 +126,7 @@ export default function User({ navigation }) {
           </Row>
           <Row style={mainStyles.verticalRowMargin}>
             <Col style={mainStyles.alignItems}>
-              <Text style={mainStyles.text}>{'Company: '}</Text>
+              <Text style={mainStyles.text}>{'Compañia: '}</Text>
             </Col>
             <Col>
               <Text style={mainStyles.text}>{UserDetails.company_name}</Text>

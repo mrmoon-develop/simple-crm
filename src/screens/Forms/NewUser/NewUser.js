@@ -178,7 +178,7 @@ const NewUser = ({ navigation }) => {
             <Row style={pollStyles.rowPicker}>
               <Picker
                 style={{ width: width }}
-                selectedValue={userDetails.type}
+                selectedValue={userDetails.company_id}
                 onValueChange={(itemValue, itemIndex) => {
                   setUserDetails({ ...userDetails, company_id: itemValue });
                 }}

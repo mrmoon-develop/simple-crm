@@ -64,7 +64,11 @@ const Poll = ({ route, navigation }) => {
             break;
 
           default:
-            setEnabled(true);
+            if (login.user.type === 2) {
+              setEnabled(false);
+            } else {
+              setEnabled(true);
+            }
             break;
         }
       })

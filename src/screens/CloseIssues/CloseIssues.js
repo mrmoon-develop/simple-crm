@@ -35,18 +35,21 @@ var { height, width } = Dimensions.get('window');
 const ActiveIssues = ({ navigation }) => {
   //Login context
   const [login, loginAction] = useContext(UserContext);
-  const [headers, setHeaders] = useState(['ID', 'Title', 'State', 'Priority']);
-  const [issues, setIssues] = useState([
-    [1, 'Prueba', 'Assigned', 'Medium'],
-    [2, 'Prueba', 'Assigned', 'Medium'],
+  const [headers, setHeaders] = useState([
+    'ID',
+    'Titulo',
+    'Compañia',
+    'Estado',
+    'Prioridad',
   ]);
+  const [issues, setIssues] = useState([]);
 
   const [layout, setLayout] = useState({
     height: height,
     width: width,
   });
 
-  const getClosedIssues = () => {
+  const getFinishedIssues = () => {
     IssuesServices.getFinishedIssues()
       .then((res) => {
         switch (res.code) {
@@ -57,22 +60,62 @@ const ActiveIssues = ({ navigation }) => {
 
           default:
             setIssues([]);
+            ToastAndroid.show(
+              'No hay incidencias cerradas aun',
+              ToastAndroid.SHORT
+            );
             break;
         }
       })
       .catch((err) => {
-        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        ToastAndroid.show('Ha ocurrido un error', ToastAndroid.SHORT);
+        console.log('err', err);
+      });
+  };
+
+  /**
+   * Get Incidencias activas by customer id
+   * @param {Number} customerId identifies customer
+   */
+  const getFinishedIssuesByCustomer = (customerId) => {
+    IssuesServices.getFinishedIssuesByCustomer(customerId)
+      .then((res) => {
+        switch (res.code) {
+          case 200:
+            var issuesArray = utils.jsonArrayToArray(res.data);
+            setIssues(issuesArray);
+            break;
+
+          default:
+            setIssues([]);
+            ToastAndroid.show(
+              'No hay incidencias cerradas aun',
+              ToastAndroid.SHORT
+            );
+            break;
+        }
+      })
+      .catch((err) => {
+        ToastAndroid.show('Ha ocurrido un error', ToastAndroid.SHORT);
         console.log('err', err);
       });
   };
 
   useEffect(() => {
-    getClosedIssues();
+    if (login.user.type == 1) {
+      getFinishedIssuesByCustomer(login.user.id);
+    } else {
+      getFinishedIssues();
+    }
   }, []);
 
   useFocusEffect(
     React.useCallback(() => {
-      getClosedIssues();
+      if (login.user.type == 1) {
+        getFinishedIssuesByCustomer(login.user.id);
+      } else {
+        getFinishedIssues();
+      }
       return () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
@@ -91,7 +134,7 @@ const ActiveIssues = ({ navigation }) => {
           onPress: () => navigation.navigate('AppSolutions'),
         }}
         centerComponent={{
-          text: 'Novedades activas',
+          text: 'Incidencias cerradas',
           style: {
             color: '#fff',
             fontWeight: 'bold',

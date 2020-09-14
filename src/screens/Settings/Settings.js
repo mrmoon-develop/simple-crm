@@ -14,17 +14,21 @@ import noProfileImage from '../../resources/images/no-profile-img.png';
 //Components
 import { Grid, Row, Col } from 'react-native-easy-grid';
 import { Header, Overlay } from 'react-native-elements';
+import CustomButton from '../../components/CustomButton/CustomButton';
 
 //Context reducer
 import { UserContext } from '../../context/userContext';
+
+//Styles
 import { mainStyles } from '../../styles/styles';
+
+//Utils
 import utils from '../../utils';
-import CustomButton from '../../components/CustomButton/CustomButton';
 
 const NewUserButton = ({ navigation }) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate('New User')}
+      onPress={() => navigation.navigate('Nuevo usuario')}
       underlayColor="white"
       style={{ padding: 20, maxHeight: 200 }}
     >
@@ -37,7 +41,7 @@ const NewUserButton = ({ navigation }) => {
             alignSelf: 'center',
           }}
         />
-        <Text style={styles.alignCenter}>Nuevo usuario {'\n'}</Text>
+        <Text style={styles.alignCenter}>Crear usuario {'\n'}</Text>
         <Text style={styles.alignCenter}>
           Aqui puedes crear un nuevo usuario
         </Text>

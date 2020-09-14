@@ -1,6 +1,7 @@
 import Axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://192.168.1.8:3000/api';
+const BASE_URL =
+  process.env.REACT_APP_API_URL || 'https://b01b8ea66373.ngrok.io/api';
 const HEADERS = {
   'Content-Type': 'application/json',
   'Access-Control-Allow-Origin': '*',
@@ -21,8 +22,22 @@ export default {
       .then((res) => res.data)
       .catch((err) => err),
 
+  getActiveIssuesByCustomer: (id) =>
+    Axios.get(`${BASE_URL}/getActiveIssuesByCustomer/${id}`, {
+      headers: HEADERS,
+    })
+      .then((res) => res.data)
+      .catch((err) => err),
+
   getFinishedIssues: () =>
     Axios.get(`${BASE_URL}/getFinishedIssues`, {
+      headers: HEADERS,
+    })
+      .then((res) => res.data)
+      .catch((err) => err),
+
+  getFinishedIssuesByCustomer: (id) =>
+    Axios.get(`${BASE_URL}/getFinishedIssuesByCustomer/${id}`, {
       headers: HEADERS,
     })
       .then((res) => res.data)
@@ -37,13 +52,6 @@ export default {
 
   updateIssue: (payload) =>
     Axios.put(`${BASE_URL}/updateIssue`, payload, {
-      headers: HEADERS,
-    })
-      .then((res) => res.data)
-      .catch((err) => err),
-
-  getActiveIssuesByCustomer: (id) =>
-    Axios.get(`${BASE_URL}/getActiveIssuesByCustomer/${id}`, {
       headers: HEADERS,
     })
       .then((res) => res.data)

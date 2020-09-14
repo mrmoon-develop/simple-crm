@@ -9,8 +9,9 @@ import {
   TextInput,
   Image,
   Button,
+  Text,
 } from 'react-native';
-import { Text, Header, Divider } from 'react-native-elements';
+import { Header } from 'react-native-elements';
 import { Grid, Row, Col } from 'react-native-easy-grid';
 
 //React native hooks
@@ -23,6 +24,7 @@ import UserServices from '../../../services/users';
 
 //Context reducer
 import { UserContext } from '../../../context/userContext';
+import utils from '../../../utils';
 
 const EditIssue = ({ route, navigation }) => {
   //Login context
@@ -30,11 +32,15 @@ const EditIssue = ({ route, navigation }) => {
 
   //Issue details
   const [issueDetails, setIssueDetails] = useState({
+    title: '',
+    description: '',
     customer_name: '',
     company_name: '',
     email: '',
     phone: '',
     attender_id: '',
+    area: '',
+    response: '',
   });
   //Technical Users
   const [technicalUsers, setTechnicalUsers] = useState([]);
@@ -48,8 +54,20 @@ const EditIssue = ({ route, navigation }) => {
       .then((res) => {
         switch (res.code) {
           case 200:
-            console.log('res', res);
-            setIssueDetails(res.data);
+            setIssueDetails({
+              id: res.data.id,
+              state: res.data.state,
+              priority: res.data.priority,
+              title: res.data.title,
+              description: res.data.description,
+              customer_name: res.data.customer_name,
+              company_name: res.data.company_name,
+              email: res.data.email,
+              phone: res.data.phone,
+              attender_id: res.data.attender_id,
+              area: res.data.area,
+              response: res.data.response,
+            });
             break;
 
           default:
@@ -89,6 +107,7 @@ const EditIssue = ({ route, navigation }) => {
       attender_id: issueDetails.attender_id,
       state: issueDetails.response && issueDetails.attender_id ? 'F' : 'AS',
       priority: issueDetails.priority,
+      area: issueDetails.area,
       response: issueDetails.response,
     };
 
@@ -244,6 +263,24 @@ const EditIssue = ({ route, navigation }) => {
 
           <Row>
             <Col>
+              <Text style={newIssueFormStyles.fieldText}>Area:</Text>
+              <Picker
+                selectedValue={issueDetails.area}
+                enabled={editable}
+                onValueChange={(itemValue, itemIndex) =>
+                  setIssueDetails({ ...issueDetails, area: itemValue })
+                }
+              >
+                <Picker.Item label="Select..." value="" />
+                <Picker.Item label="Soporte" value="S" />
+                <Picker.Item label="Desarrollo" value="D" />
+                <Picker.Item label="Proyectos" value="P" />
+              </Picker>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
               <Text style={newIssueFormStyles.fieldText}>Descripcion:</Text>
               <TextInput
                 style={newIssueFormStyles.textArea}
@@ -290,6 +327,7 @@ const EditIssue = ({ route, navigation }) => {
                   setIssueDetails({ ...issueDetails, attender_id: itemValue });
                 }}
               >
+                <Picker.Item label={'Select...'} value={''} />
                 {technicalUsers.map((technical, i) => {
                   return (
                     <Picker.Item

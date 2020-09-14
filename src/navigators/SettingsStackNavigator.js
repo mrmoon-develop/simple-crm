@@ -15,8 +15,8 @@ const SettingStackNavigator = ({ navigation }) => {
         headerShown: false,
       }}
     >
-      <SettingStack.Screen name={'Settings'} component={Settings} />
-      <SettingStack.Screen name={'New User'} component={NewUser} />
+      <SettingStack.Screen name={'Configuraciones'} component={Settings} />
+      <SettingStack.Screen name={'Nuevo usuario'} component={NewUser} />
     </SettingStack.Navigator>
   );
 };

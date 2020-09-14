@@ -27,6 +27,7 @@ import * as Permissions from 'expo-permissions';
 
 //Services
 import issueServices from '../../../services/issues';
+import { useFocusEffect } from '@react-navigation/native';
 
 const NewIssue = ({ route, navigation }) => {
   const [login, loginAction] = useContext(UserContext);
@@ -36,9 +37,9 @@ const NewIssue = ({ route, navigation }) => {
    */
   const [UserDetails, setUserDetails] = useState(login.user);
 
-  const [prioritySelected, setPrioritySelected] = useState('L');
-
   const [issueTitle, setIssueTitle] = useState('');
+  const [prioritySelected, setPrioritySelected] = useState('L');
+  const [area, setArea] = useState('');
   const [description, setDescription] = useState('');
   const [evidence, setEvidence] = useState(null);
 
@@ -71,20 +72,22 @@ const NewIssue = ({ route, navigation }) => {
 
   const saveIssue = () => {
     let formatRequest = {
+      area: area,
       title: issueTitle,
       description: description,
       state: 'CR',
       priority: prioritySelected,
       company_id: UserDetails.company_id,
       customer_id: UserDetails.id,
-      evidence: evidence.base64,
+      evidence: utils.isNullOrEmpty(evidence) ? '' : evidence.base64,
     };
 
-    console.log('formatRequest', formatRequest);
+    console.log('formatRequest - Save Issue', formatRequest);
 
     issueServices
       .createIssue(formatRequest)
       .then((res) => {
+        console.log('res.code, res.data', res.code, res.data);
         switch (res.code) {
           case 200:
             setIssueTitle('');
@@ -99,7 +102,7 @@ const NewIssue = ({ route, navigation }) => {
             break;
 
           default:
-            ToastAndroid.show('Error', ToastAndroid.SHORT);
+            ToastAndroid.show('Error creando la novedad', ToastAndroid.SHORT);
             break;
         }
       })
@@ -115,6 +118,19 @@ const NewIssue = ({ route, navigation }) => {
   useEffect(() => {
     getPermissionAsync();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setPrioritySelected('L');
+        setIssueTitle('');
+        setDescription('');
+        setEvidence(null);
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, [])
+  );
 
   return (
     <>
@@ -206,9 +222,24 @@ const NewIssue = ({ route, navigation }) => {
                   setPrioritySelected(itemValue)
                 }
               >
-                <Picker.Item label="Low" value="L" color={'green'} />
-                <Picker.Item label="Medium" value="M" color={'#ffd966'} />
-                <Picker.Item label="High" value="H" color={'red'} />
+                <Picker.Item label="Bajo" value="L" color={'green'} />
+                <Picker.Item label="Medio" value="M" color={'#ffd966'} />
+                <Picker.Item label="Alto" value="H" color={'red'} />
+              </Picker>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <Text style={newIssueFormStyles.fieldText}>Area:</Text>
+              <Picker
+                selectedValue={area}
+                onValueChange={(itemValue, itemIndex) => setArea(itemValue)}
+              >
+                <Picker.Item label="Select..." value="" />
+                <Picker.Item label="Soporte" value="S" />
+                <Picker.Item label="Desarrollo" value="D" />
+                <Picker.Item label="Proyectos" value="P" />
               </Picker>
             </Col>
           </Row>

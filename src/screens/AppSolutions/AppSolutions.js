@@ -7,6 +7,7 @@ import {
   Image,
   TouchableHighlight,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 
 //Context reducer
@@ -30,12 +31,14 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 
 //Services
 import IssuesServices from '../../services/issues';
+
+//React navigation hooks
 import { useFocusEffect } from '@react-navigation/native';
 
 const NewIssueButton = ({ navigation }) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate('New Issue')}
+      onPress={() => navigation.navigate('Nueva incidencia')}
       underlayColor="white"
       style={{ padding: 20 }}
     >
@@ -60,17 +63,19 @@ const NewIssueButton = ({ navigation }) => {
 const ActiveIssuesButton = ({ navigation, activeIssues }) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate('Active Issues')}
+      onPress={() => navigation.navigate('Incidencias activas')}
       underlayColor="white"
       style={{ padding: 20 }}
     >
       <View style={styles.center}>
-        <Badge
-          status="success"
-          containerStyle={{ position: 'absolute', top: 0, right: 20 }}
-          // textStyle={{ fontSize: 40 }}
-          value={activeIssues}
-        />
+        {activeIssues > 0 && (
+          <Badge
+            status="success"
+            containerStyle={{ position: 'absolute', top: 0, right: 20 }}
+            // textStyle={{ fontSize: 40 }}
+            value={activeIssues}
+          />
+        )}
         <Image
           source={ActiveIssuesImg}
           style={{ width: 100, height: 100, alignSelf: 'center' }}
@@ -85,7 +90,7 @@ const ActiveIssuesButton = ({ navigation, activeIssues }) => {
 const Reports = ({ navigation }) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate('Reports')}
+      onPress={() => navigation.navigate('Reportes')}
       underlayColor="white"
       style={{ padding: 20 }}
     >
@@ -104,7 +109,7 @@ const Reports = ({ navigation }) => {
 const ClosedIssuesButton = ({ navigation }) => {
   return (
     <TouchableHighlight
-      onPress={() => navigation.navigate('Closed Issues')}
+      onPress={() => navigation.navigate('Incidencias cerradas')}
       underlayColor="white"
       style={{ padding: 20 }}
     >
@@ -137,6 +142,16 @@ const UserDetails = ({ navigation }) => {
    */
   const toggleOverlay = () => {
     setVisible(!visible);
+  };
+
+  /**
+   * Handle logout
+   */
+  const logout = () => {
+    loginAction({
+      type: 'logout',
+    });
+    navigation.replace('AuthStack', { screen: 'Login' });
   };
 
   return (
@@ -193,11 +208,10 @@ const UserDetails = ({ navigation }) => {
             </Text>
           </Row>
           <Row style={{ alignSelf: 'center' }}>
-            <CustomButton
-              transparent={false}
+            <Button
               title={'Cerrar sesion'}
-              onPress={() => logout()}
-              style={{ backgroundColor: 'red' }}
+              buttonStyle={{ backgroundColor: 'red' }}
+              onPress={logout}
             />
           </Row>
         </Grid>
@@ -213,12 +227,14 @@ const AppSolutions = ({ navigation }) => {
   const [activeIssues, setActiveIssues] = useState();
 
   /**
-   * Get active issues by customer id
+   * Get Incidencias activas by customer id
    * @param {Number} customerId identifies customer
    */
   const getActiveIssuesByCustomer = (customerId) => {
+    console.log('Entre');
     IssuesServices.getActiveIssuesByCustomer(customerId)
       .then((res) => {
+        console.log('res', res);
         switch (res.code) {
           case 200:
             console.log('res.data.length', res.data.length);
@@ -227,18 +243,18 @@ const AppSolutions = ({ navigation }) => {
 
           default:
             setActiveIssues([]);
-            ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+            // ToastAndroid.show('Ha ocurrido un error', ToastAndroid.SHORT);
             break;
         }
       })
       .catch((err) => {
-        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        ToastAndroid.show('Ha ocurrido un error', ToastAndroid.SHORT);
         console.log('err', err);
       });
   };
 
   /**
-   * Get general active issues
+   * Get general Incidencias activas
    */
   const getActiveIssues = () => {
     IssuesServices.getActiveIssues()
@@ -251,12 +267,12 @@ const AppSolutions = ({ navigation }) => {
 
           default:
             setActiveIssues([]);
-            ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+            ToastAndroid.show('Ha ocurrido un error', ToastAndroid.SHORT);
             break;
         }
       })
       .catch((err) => {
-        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        ToastAndroid.show('Ha ocurrido un error', ToastAndroid.SHORT);
         console.log('err', err);
       });
   };

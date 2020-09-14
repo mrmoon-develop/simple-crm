@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import 'react-native-gesture-handler';
 
@@ -47,14 +46,14 @@ const HomeStackNavigator = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen name={'AppSolutions'} component={AppSolutions} />
-      <HomeStack.Screen name={'New Issue'} component={NewIssue} />
-      <HomeStack.Screen name={'Active Issues'} component={ActiveIssues} />
-      <HomeStack.Screen name={'Reports'} component={Reports} />
-      <HomeStack.Screen name={'Closed Issues'} component={CloseIssues} />
-      <HomeStack.Screen name={'Profile'} component={UserDetails} />
+      <HomeStack.Screen name={'Nueva incidencia'} component={NewIssue} />
+      <HomeStack.Screen name={'Incidencias activas'} component={ActiveIssues} />
+      <HomeStack.Screen name={'Incidencias cerradas'} component={CloseIssues} />
+      <HomeStack.Screen name={'Reportes'} component={Reports} />
+      <HomeStack.Screen name={'Mi perfil'} component={UserDetails} />
       {showSettings && (
         <HomeStack.Screen
-          name={'Settings'}
+          name={'Configuraciones'}
           component={SettingsStackNavigator}
         />
       )}

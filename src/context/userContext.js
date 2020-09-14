@@ -33,7 +33,7 @@ const userReducer = (state = initialState, payload) => {
         console.log(msg);
       });
 
-      ToastAndroid.show('Sesión expirada', ToastAndroid.SHORT);
+      ToastAndroid.show('Cerrando sesion', ToastAndroid.SHORT);
 
       return { ...state, user: payload.data, activo: false };
     default:

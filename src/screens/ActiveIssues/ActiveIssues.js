@@ -37,7 +37,7 @@ const ActiveIssues = ({ navigation }) => {
 
   const [headers, setHeaders] = useState([
     'ID',
-    'Título',
+    'Titulo',
     'Compañia',
     'Estado',
     'Prioridad',
@@ -50,7 +50,7 @@ const ActiveIssues = ({ navigation }) => {
   });
 
   /**
-   * Get general active issues
+   * Get general Incidencias activas
    */
   const getActiveIssues = () => {
     IssuesServices.getActiveIssues()
@@ -63,18 +63,21 @@ const ActiveIssues = ({ navigation }) => {
 
           default:
             setIssues([]);
-            ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+            ToastAndroid.show(
+              'No hay incidencias activas aun',
+              ToastAndroid.SHORT
+            );
             break;
         }
       })
       .catch((err) => {
-        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        ToastAndroid.show('Ha ocurrido un error', ToastAndroid.SHORT);
         console.log('err', err);
       });
   };
 
   /**
-   * Get active issues by customer id
+   * Get Incidencias activas by customer id
    * @param {Number} customerId identifies customer
    */
   const getActiveIssuesByCustomer = (customerId) => {
@@ -88,12 +91,15 @@ const ActiveIssues = ({ navigation }) => {
 
           default:
             setIssues([]);
-            ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+            ToastAndroid.show(
+              'No hay incidencias activas aun',
+              ToastAndroid.SHORT
+            );
             break;
         }
       })
       .catch((err) => {
-        ToastAndroid.show('An error has ocurred', ToastAndroid.SHORT);
+        ToastAndroid.show('Ha ocurrido un error', ToastAndroid.SHORT);
         console.log('err', err);
       });
   };
@@ -133,7 +139,7 @@ const ActiveIssues = ({ navigation }) => {
           onPress: () => navigation.navigate('AppSolutions'),
         }}
         centerComponent={{
-          text: 'Novedades activas',
+          text: 'Incidencias activas',
           style: {
             color: '#fff',
             fontWeight: 'bold',
